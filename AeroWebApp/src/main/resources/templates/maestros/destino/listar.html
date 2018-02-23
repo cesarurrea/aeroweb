@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="aerowebApp" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header :: header">
+</head>
+<body ng-controller="destinoController">
+	<div th:include="fragments/navigation :: navigation"></div>
+
+
+
+	<div class="container" data-ng-init="onloadFun()">
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Registro de Destinos</h3>
+			</div>
+			<div class="panel-body">
+				<button type="button" class="btn btn-default" data-toggle="modal"
+					ng-click="createDialog()">Nuevo Destino</button>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Consecutivo</th>
+							<th>Origen</th>
+							<th>Destino</th>
+							<th>esidayvuelta</th>
+							<th>esinternacional</th>
+							<th>idtarifa</th>
+							<th colspan="2">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="d in destinos">
+							<td>{{ d.iddestino }}</td>
+							<td>{{ d.origen }}</td>
+							<td>{{ d.destino }}</td>
+							<td>{{ d.esidayvuelta }}</td>
+							<td>{{ d.esinternacional }}</td>
+							<td>{{ d.idtarifa }}</td>
+							<td><button type="button" class="btn btn-default"
+									ng-click="confirmUpdate(d)">Editar</button></td>
+							<td><button type="button" class="btn btn-danger"
+									ng-click="confirmDelete(d)">Eliminar</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="panel-footer"></div>
+		</div>
+
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">{{accion}}</h4>
+				</div>
+				<div class="modal-body">
+
+					<form class="form-horizontal"
+						ng-submit="adicionar(DestinoSeleccionado)">
+						<input type="hidden" class="form-control" id="hiddenConsecutivo"
+							ng-model="DestinoSeleccionado.iddestino" />
+						<div class="form-group">
+							<label for="inputOrigen" class="col-sm-4 control-label">Origen</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputOrigen"
+									placeholder="Origen" ng-model="DestinoSeleccionado.origen" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputDestino" class="col-sm-4 control-label">Destino</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputDestino"
+									placeholder="Destino" ng-model="DestinoSeleccionado.destino" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputIdayvuelta" class="col-sm-4 control-label">Ida
+								y Vuelta</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputIdayvuelta"
+									placeholder="Es ida y Vuelta (S o N)"
+									ng-model="DestinoSeleccionado.esidayvuelta" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputEsinternacional" class="col-sm-4 control-label">Internacional</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputApellidos"
+									placeholder="Internacional (S o N)"
+									ng-model="DestinoSeleccionado.esinternacional" />
+							</div>
+						</div>
+
+
+
+
+						<div class="form-group">
+							<label for="inputTarifal" class="col-sm-4 control-label">Tarifa</label>
+							<div class="col-sm-7">
+								<select class="selectpicker"
+									ng-model="DestinoSeleccionado.idtarifa">
+									<option ng-selected="x.idtarifa" ng-repeat="x in tarifas"
+										value="{{x.idtarifa}}">{{x.idtarifa}} -</option>
+								</select>
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<div class="col-sm-offset-1 col-sm-10">
+								<input type="submit" class="btn btn-default pull-right"
+									value="Aceptar" />
+
+							</div>
+						</div>
+
+					</form>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="EliminarModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Confirmar Accion</h4>
+				</div>
+				<div class="modal-body">
+					<p>Confirma la eliminacion del registro seleccionado?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+					<button type="button" class="btn btn-primary" ng-click="eliminar()">Confirmar</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+
+
+	<div th:include="fragments/footer :: footer"></div>
+	<script src="js/controller/DestinoController.js"></script>
+	<script src="js/service/DestinoService.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="aerowebApp" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/header :: header">
+</head>
+<body ng-controller="clienteController">
+	<div th:include="fragments/navigation :: navigation"></div>
+
+
+
+	<div class="container" data-ng-init="onloadFun()">
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Registro de Clientes</h3>
+			</div>
+			<div class="panel-body">
+				<button type="button" class="btn btn-default" data-toggle="modal"
+					ng-click="createDialog()">Nuevo Cliente</button>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Consecutivo</th>
+							<th>Tipo Documento</th>
+							<th>Numero Documento</th>
+							<th>Nombres</th>
+							<th>Apellidos</th>
+							<th>E-mail</th>
+							<th>Movil</th>
+							<th>Telefono</th>
+							<th colspan="2">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="c in clientes">
+							<td>{{ c.idcliente }}</td>
+							<td>{{ c.tipodocumento }}</td>
+							<td>{{ c.nrodocumento }}</td>
+							<td>{{ c.nombrescliente }}</td>
+							<td>{{ c.apellidoscliente }}</td>
+							<td>{{ c.emailcliente }}</td>
+							<td>{{ c.movilcliente }}</td>
+							<td>{{ c.telefonocliente }}</td>
+							<td><button type="button" class="btn btn-default"
+									ng-click="confirmUpdate(c)">Editar</button></td>
+							<td><button type="button" class="btn btn-danger"
+									ng-click="confirmDelete(c)">Eliminar</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="panel-footer"></div>
+		</div>
+
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">{{accion}}</h4>
+				</div>
+				<div class="modal-body">
+
+					<form class="form-horizontal"
+						ng-submit="adicionar(ClienteSeleccionado)">
+						<input type="hidden" class="form-control" id="hiddenConsecutivo"
+							ng-model="ClienteSeleccionado.idcliente" />
+						<div class="form-group">
+							<label for="inputTipodocumento" class="col-sm-4 control-label">Tipo
+								Documento</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputTipodocumento"
+									placeholder="Tipo Documento"
+									ng-model="ClienteSeleccionado.tipodocumento" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputNumerodocumento" class="col-sm-4 control-label">Numero
+								Documento</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control"
+									id="inputNumerodocumento" placeholder="Numero Documento"
+									ng-model="ClienteSeleccionado.nrodocumento" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputNombres" class="col-sm-4 control-label">Nombres</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputNombres"
+									placeholder="Nombres"
+									ng-model="ClienteSeleccionado.nombrescliente" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputApellidos" class="col-sm-4 control-label">Apellidos</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputApellidos"
+									placeholder="Apellidos"
+									ng-model="ClienteSeleccionado.apellidoscliente" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="inputEmail" class="col-sm-4 control-label">E-mail</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputEmail"
+									placeholder="E-mail"
+									ng-model="ClienteSeleccionado.emailcliente" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="inputMovil" class="col-sm-4 control-label">Movil</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputMovil"
+									placeholder="Movil" ng-model="ClienteSeleccionado.movilcliente" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="inputTelefono" class="col-sm-4 control-label">Telefono</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="inputTelefono"
+									placeholder="Telefono"
+									ng-model="ClienteSeleccionado.telefonocliente" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-offset-1 col-sm-10">
+								<input type="submit" class="btn btn-default pull-right"
+									value="Aceptar" />
+
+							</div>
+						</div>
+
+					</form>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="EliminarModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Confirmar Accion</h4>
+				</div>
+				<div class="modal-body">
+					<p>Confirma la eliminacion del registro seleccionado?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+					<button type="button" class="btn btn-primary" ng-click="eliminar()">Confirmar</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+
+
+	<div th:include="fragments/footer :: footer"></div>
+	<script src="js/controller/ClienteController.js"></script>
+	<script src="js/service/ClienteService.js"></script>
+</body>
+</html>
