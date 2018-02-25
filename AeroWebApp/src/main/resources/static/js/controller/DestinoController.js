@@ -6,7 +6,11 @@ aerowebApp.controller("destinoController", function($scope, destinoService) {
 		destino : '',
 		esidayvuelta : '',
 		esinternacional : '',
-		idtarifa : ''
+		idtarifa : {
+			idtarifa : 0,
+			valor : 0,
+			observaciones : ''
+		}
 	}
 
 	$scope.DestinoSeleccionado = {};
@@ -24,7 +28,8 @@ aerowebApp.controller("destinoController", function($scope, destinoService) {
 		var requestResponse = destinoService.getTarifas();
 
 		requestResponse.then(function(response) {
-			$scope.tarifas = response.data;
+			$scope.tarifas = response.data;		
+			
 		}, function() {
 
 		})
@@ -78,12 +83,23 @@ aerowebApp.controller("destinoController", function($scope, destinoService) {
 		$scope.accion = 'Editar Destino';
 
 		$scope.DestinoSeleccionado = angular.copy(data);
+		
+		angular.forEach($scope.tarifas, function(tarifa){
+			if($scope.DestinoSeleccionado.idtarifa.idtarifa == tarifa.idtarifa){
+				$scope.DestinoSeleccionado.idtarifa = tarifa;
+			}
+		});
+		
+		
 		$('#formModal').modal('show');
 	}
 
 	$scope.createDialog = function() {
 		$scope.accion = 'Nuevo Destino';
-		$scope.DestinoSeleccionado = {};
+		//$scope.DestinoSeleccionado = {};
+		$scope.DestinoSeleccionado = angular.copy($scope.Destino);
+		$scope.DestinoSeleccionado.esidayvuelta = 'N';
+		$scope.DestinoSeleccionado.esinternacional = 'N';
 		$('#formModal').modal('show');
 	}
 

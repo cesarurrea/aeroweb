@@ -51,8 +51,9 @@ public class Destino implements Serializable {
 	private String esidayvuelta;
 	@Column(name = "esinternacional")
 	private String esinternacional;
-	@Column(name = "idtarifa")
-	private Integer idtarifa;
+	@JoinColumn(name = "idtarifa", referencedColumnName = "idtarifa")
+	@ManyToOne
+	private Tarifa idtarifa;
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "iddestino")
 	private Collection<Vuelo> vueloCollection;
@@ -64,11 +65,11 @@ public class Destino implements Serializable {
 		this.iddestino = iddestino;
 	}
 
-	public Integer getIdtarifa() {
+	public Tarifa getIdtarifa() {
 		return idtarifa;
 	}
 
-	public void setIdtarifa(Integer idtarifa) {
+	public void setIdtarifa(Tarifa idtarifa) {
 		this.idtarifa = idtarifa;
 	}
 
